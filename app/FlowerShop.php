@@ -1,5 +1,9 @@
 <?php
 
+namespace App;
+
+use App\Suppliers\Supplier;
+
 class FlowerShop
 {
     private const DISCOUNT = 20;

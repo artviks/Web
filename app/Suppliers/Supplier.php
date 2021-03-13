@@ -1,4 +1,8 @@
 <?php
+namespace App\Suppliers;
+
+use App\Flower;
+use App\FlowerCollection;
 
 interface Supplier
 {

@@ -1,6 +1,12 @@
 <?php
-
 require_once 'vendor/autoload.php';
+
+use App\Flower;
+use App\FlowerShop;
+use App\Suppliers\Gardener;
+use App\Suppliers\LocalWarehouse;
+use App\Suppliers\OtherWarehouse;
+
 
 $gardener = new Gardener();
 $gardener->grow([
@@ -22,7 +28,7 @@ $other->buyFlower($gardener->deliverFlower(new Flower('RedTulip', 2, 110)));
 $shop = new FlowerShop([$local, $gardener, $other]);
 
 foreach ($shop->getFlowers()->flowers() as $flower) {
-    echo $flower->name() . ', ' . $flower->amount() . ' pcs, price ' . $flower->price() . PHP_EOL;
+    echo $flower->name() . ', ' . $flower->amount() . ' pcs, price ' . $flower->price() . '<br>';
 }
 
 
@@ -35,5 +41,3 @@ $gender = 'f';
 $shop->gender($gender);
 
 echo 'Total price: ' . $shop->totalPrice();
-
-$shop->remove();

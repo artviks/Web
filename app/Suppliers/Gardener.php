@@ -1,6 +1,10 @@
 <?php
 
-require_once 'Supplier.php';
+namespace App\Suppliers;
+
+use App\Flower;
+use App\FlowerCollection;
+
 
 class Gardener implements Supplier
 {
