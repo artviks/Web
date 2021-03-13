@@ -5,39 +5,50 @@ use App\Flower;
 use App\FlowerShop;
 use App\Suppliers\Gardener;
 use App\Suppliers\LocalWarehouse;
-use App\Suppliers\OtherWarehouse;
 
+$csv = array();
+$lines = file('storage/Gardener.csv', FILE_IGNORE_NEW_LINES);
 
-$gardener = new Gardener();
-$gardener->grow([
-    new Flower('YellowTulip', 10, 100),
-    new Flower('RedTulip', 10, 110),
-    new Flower('BlueTulip', 10, 120),
-    new Flower('WhiteRose', 10, 200),
-    new Flower('PinkRose', 10, 210),
-    new Flower('RedRose', 10, 220),
-]);
-
-$local = new LocalWarehouse();
-$local->buyFlower($gardener->deliverFlower(new Flower('RedTulip', 4, 110)));
-
-$other = new OtherWarehouse();
-$other->buyFlower($gardener->deliverFlower(new Flower('RedTulip', 2, 110)));
-
-
-$shop = new FlowerShop([$local, $gardener, $other]);
-
-foreach ($shop->getFlowers()->flowers() as $flower) {
-    echo $flower->name() . ', ' . $flower->amount() . ' pcs, price ' . $flower->price() . '<br>';
+foreach ($lines as $value) {
+    $flower = explode(', ', $value);
+    $csv[] = new Flower($flower[0], (int)$flower[1], (int)$flower[2]);
 }
 
+$gardener = new Gardener();
+$gardener->grow($csv);
 
-$input = 'RedTulip 4';
-$data = explode(' ', $input);
-$order = new Flower($data[0], (int)$data[1]);
-$shop->order($order);
+$file = file_get_contents('storage/local.json');
+$json = json_decode($file, true);
 
-$gender = 'f';
-$shop->gender($gender);
+$local = new LocalWarehouse();
+$local->buyFlower(new Flower($json["name"], $json["amount"], $json["price"]));
 
-echo 'Total price: ' . $shop->totalPrice();
+
+$shop = new FlowerShop([$local, $gardener]);
+
+?>
+
+<html>
+<body>
+
+<h2>Flower Shop</h2>
+
+<table style="width:250px">
+    <tr>
+        <th>Flower</th>
+        <th>Amount</th>
+        <th>Price</th>
+    </tr>
+    <?php foreach ($shop->getFlowers()->flowers() as $flower) : ?>
+        <tr>
+            <td><?= $flower->name() ?></td>
+            <td><?= $flower->amount() ?></td>
+            <td><?= $flower->price() ?></td>
+        </tr>
+    <?php endforeach; ?>
+
+</table>
+
+</body>
+</html>
+
